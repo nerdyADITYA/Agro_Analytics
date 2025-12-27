@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from Crop.models import User,Crop
 from django.http import JsonResponse
 from django.conf import settings
+from django.db import IntegrityError
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -22,18 +23,28 @@ def signup(request):
     
     # If the request is a POST, process the form data
     if request.method == "POST":
-        # Create a new Student object with the submitted username, email, and password
-        User.objects.create(
-            First_Name = request.POST["first_name"],
-            Last_Name = request.POST["last_name"],
-            Username = request.POST["username"],
-            Email = request.POST["email"],
-            Age = request.POST["age"],
-            Phone_Number = request.POST["phone"],
-            Password = request.POST["password"]
-        )
-        # After successful signup, redirect the user to the login page
-        return redirect("login")
+        # Create a new User object with the submitted username, email, and password
+        try:
+            User.objects.create(
+                First_Name = request.POST["first_name"],
+                Last_Name = request.POST["last_name"],
+                Username = request.POST["username"],
+                Email = request.POST["email"],
+                Age = request.POST.get("age"),
+                Phone_Number = request.POST.get("phone"),
+                Password = request.POST["password"]
+            )
+            # After successful signup, redirect the user to the login page
+            return redirect("login")
+        except IntegrityError as e:
+            msg = str(e).lower()
+            if 'email' in msg or 'unique constraint' in msg:
+                error_message = 'This email is already registered. Please log in or use a different email.'
+            else:
+                error_message = 'Unable to create account. Please check your details and try again.'
+
+            # Render the signup page with a friendly error message
+            return render(request, "signup.html", {"error": error_message})
     # If the request is GET, render the signup form
     return render(request,"signup.html")
 
