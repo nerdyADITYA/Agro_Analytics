@@ -214,21 +214,29 @@ def home(request):
     # -----------------------------------------------------
 
     context = {
-        "user": user,
-        "best_crop": best_crop,
-        "confidence": top5[0][1] * 100,
-        "accuracy": MODEL_ACCURACY * 100,
-        "top5_crops": [(c, p * 100) for c, p in top5],
-        "plot_data": plot_data,
-        "input_data": {
-            "city": city,
-            "country": country,
-            "state": state,
-            "temperature": temperature,
-            "humidity": humidity,
-            "rainfall": rainfall,
-        },
+    "user": user,
+    "best_crop": best_crop,
+    "confidence": top5[0][1] * 100,
+    "accuracy": MODEL_ACCURACY * 100,
+    "top5_crops": [(c, p * 100) for c, p in top5],
+    "plot_data": plot_data,
+    "input_data": {
+        "city": city,
+        "country": country,
+        "state": state,
+        "latitude": lat,
+        "longitude": lon,
+        "nitrogen": nitrogen,
+        "phosphorus": phosphorus,
+        "potassium": potassium,
+        "ph": ph,
+        "temperature": temperature,
+        "humidity": humidity,
+        "rainfall": rainfall,
+        "weather_source": "OpenWeatherMap API"
     }
+}
+
 
     return render(request, "home.html", context)
 
