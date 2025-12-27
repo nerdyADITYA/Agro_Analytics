@@ -127,11 +127,11 @@ def home(request):
         return JsonResponse({'error': f'Invalid parameter value. Nitrogen, Phosphorus, Potassium, and pH must be numeric.'}, status=400)
 
     # OpenWeatherMap API key (replace with your actual key)
-    api_key = '415ba6cfae13440c33af57516e83c925'  # Replace with your API key
+    OPENWEATHER_API_KEY = os.environ.get('415ba6cfae13440c33af57516e83c925')  # Replace with your API key
 
     # First, get coordinates from city name using Geocoding API
     try:
-        geo_url = f'http://api.openweathermap.org/geo/1.0/direct?q={city}&appid={api_key}'
+        geo_url = f'http://api.openweathermap.org/geo/1.0/direct?q={city}&appid={OPENWEATHER_API_KEY}'
         geo_response = requests.get(geo_url)
         geo_response.raise_for_status()
         geo_data = geo_response.json()
